@@ -1,0 +1,145 @@
+eva2_10_right_join_excluding
+
+Microsoft Windows [Versión 10.0.22631.4317]
+(c) Microsoft Corporation. Todos los derechos reservados.
+
+C:\Users\estra>mysqlsh
+MySQL Shell 8.0.38
+
+Copyright (c) 2016, 2024, Oracle and/or its affiliates.
+Oracle is a registered trademark of Oracle Corporation and/or its affiliates.
+Other names may be trademarks of their respective owners.
+
+Type '\help' or '\?' for help; '\quit' to exit.
+ MySQL  JS > \sql
+Switching to SQL mode... Commands end with ;
+ MySQL  SQL > \connect --mc root@localhost
+Creating a Classic session to 'root@localhost'
+Fetching global names for auto-completion... Press ^C to stop.
+Your MySQL connection id is 9
+Server version: 8.0.39 MySQL Community Server - GPL
+No default schema selected; type \use <schema> to set one.
+ MySQL  localhost:3306 ssl  SQL > use tbd_e2;
+Default schema set to `tbd_e2`.
+Fetching global names, object names from `tbd_e2` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > select * from producto;
++----+-------------------+---------+
+| id | nombre            | precio  |
++----+-------------------+---------+
+|  1 | pochoclo          |   20.00 |
+|  2 | nachos            |   59.00 |
+|  3 | iphone            |   25.00 |
+|  8 | Helado            |  100.00 |
+|  9 | Tacos             |   64.00 |
+| 10 | Daniel Bladerrama | 1500.00 |
+| 11 | Gamboa            |    8.00 |
++----+-------------------+---------+
+7 rows in set (0.0017 sec)
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > desc producto;
++--------+---------------+------+-----+---------+----------------+
+| Field  | Type          | Null | Key | Default | Extra          |
++--------+---------------+------+-----+---------+----------------+
+| id     | int           | NO   | PRI | NULL    | auto_increment |
+| nombre | varchar(30)   | NO   |     | NULL    |                |
+| precio | decimal(10,2) | NO   |     | NULL    |                |
++--------+---------------+------+-----+---------+----------------+
+3 rows in set (0.0023 sec)
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > use tbd_e1
+Default schema set to `tbd_e1`.
+Fetching global names, object names from `tbd_e1` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3306 ssl  tbd_e1  SQL > use tbd_e1;
+Default schema set to `tbd_e1`.
+Fetching global names, object names from `tbd_e1` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3306 ssl  tbd_e1  SQL > use tbd_e2;
+Default schema set to `tbd_e2`.
+Fetching global names, object names from `tbd_e2` for auto-completion... Press ^C to stop.
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > select a.name, a.apellidos, sum(c.cant * d.precio) as total from cliente a left join factura b on a.id = b.idcliente left join factura_detalle c on b.folio = c.idfactura left join producto d on c.idproducto = d.id group by a.id order by a.apellidos, a.name;
+ERROR: 1146 (42S02): Table 'tbd_e2.factura' doesn't exist
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > select a.name, a.apellidos, sum(c.cant * d.precio) as total from cliente a left join fatura b on a.id = b.idcliente left join fatura_detalle c on b.folio = c.idfatura left join producto d on c.idproducto = d.id group by a.id order by a.apellidos, a.name;
+ERROR: 1054 (42S22): Unknown column 'c.cant' in 'field list'
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > select a.name, a.apellidos, sum(c.cantidad * d.precio) as total from cliente a left join fatura b on a.id = b.idcliente left join fatura_detalle c on b.folio = c.idfatura left join producto d on c.idproducto = d.id group by a.id order by a.apellidos, a.name;
+ERROR: 1054 (42S22): Unknown column 'c.idfatura' in 'on clause'
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > select a.name, a.apellidos, sum(c.cantidad * d.precio) as total from cliente a left join fatura b on a.id = b.idcliente left join fatura_detalle c on b.folio = c.idfactura left join producto d on c.idproducto = d.id group by a.id order by a.apellidos, a.name;
+ERROR: 1054 (42S22): Unknown column ' a.name' in 'order clause'
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > select a.nombre, a.apellidos, sum(c.cantidad * d.precio) as total from cliente a left join fatura b on a.id = b.idcliente left join fatura_detalle c on b.folio = c.idfactura left join producto d on c.idproducto = d.id group by a.id order by a.apellidos, a.nombre;
+ERROR: 1054 (42S22): Unknown column 'a.nombre' in 'field list'
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > select a.name, a.apellidos, sum(c.cantidad * d.precio) as total from cliente a left join fatura b on a.id = b.idcliente left join fatura_detalle c on b.folio = c.idfactura left join producto d on c.idproducto = d.id group by a.id order by a.apellidos, a.name;
+ERROR: 1054 (42S22): Unknown column ' a.name' in 'order clause'
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > select a.name, a.apellidos, ifnull(sum(c.cantidad * d.precio)0) as total from cliente a left join fatura b on a.id = b.idcliente left join fatura_detalle c on b.folio = c.idfactura left join producto d on c.idproducto = d.id group by a.id order by a.apellidos, a.name;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '0) as total from cliente a left join fatura b on a.id = b.idcliente left join fa' at line 1
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > create table tablabb(id int key auto_increment, idtablaa in, nombre varchar(50));
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'in, nombre varchar(50))' at line 1
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > create table tablabb(id int key auto_increment, idtablaa int, nombre varchar(50));
+Query OK, 0 rows affected (0.1214 sec)
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > insert into tablabb(idtablaa, nombre) values (1, "dddd"),(2,"jjjj"),(3,"tttt"),(null,"pppp");
+Query OK, 4 rows affected (0.0149 sec)
+
+Records: 4  Duplicates: 0  Warnings: 0
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > insert into tablabb(idtablaa, nombre) values (null, "oooo");
+Query OK, 1 row affected (0.0126 sec)
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > select a.nombre, b.nombre
+                                       -> from tablaa a
+                                       -> left join tablabb
+                                       -> b on a.id = b.idtablaa;
++--------+--------+
+| nombre | nombre |
++--------+--------+
+| A      | dddd   |
+| B      | jjjj   |
+| C      | tttt   |
+| C      | NULL   |
++--------+--------+
+4 rows in set (0.0274 sec)
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > select a.nombre, b.nombre from tablaa a rigth join tablabb b on a.id = b.idtablaa;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rigth join tablabb b on a.id = b.idtablaa' at line 1
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > select a.nombre, b.nombre from tablaa a rigth join tablabb b on a.id = b.idtablaa;
+ERROR: 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'rigth join tablabb b on a.id = b.idtablaa' at line 1
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > select a.nombre, b.nombre from tablaa a right join tablabb b on a.id = b.idtablaa;
++--------+--------+
+| nombre | nombre |
++--------+--------+
+| A      | dddd   |
+| B      | jjjj   |
+| C      | tttt   |
+| NULL   | pppp   |
+| NULL   | oooo   |
++--------+--------+
+5 rows in set (0.0013 sec)
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > select a.nombre, b.apellidos, b.folio
+                                       -> from cliente a
+                                       -> left join fatura b
+                                       -> on a.id = b.iscliente;
+ERROR: 1054 (42S22): Unknown column 'a.nombre' in 'field list'
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > select a.name, b.apellidos, b.folio from cliente a left join fatura b on a.id = b.iscliente;
+ERROR: 1054 (42S22): Unknown column 'b.apellidos' in 'field list'
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > select a.name, b.apellido, b.folio from cliente a left join fatura b on a.id = b.iscliente;
+ERROR: 1054 (42S22): Unknown column 'b.apellido' in 'field list'
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > select a.name, b.apellidos, b.folio from cliente a left join fatura b on a.id = b.iscliente;
+ERROR: 1054 (42S22): Unknown column 'b.apellidos' in 'field list'
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > select a.name, a.apellidos, b.folio from cliente a left join fatura b on a.id = b.iscliente;
+ERROR: 1054 (42S22): Unknown column 'b.iscliente' in 'on clause'
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > select a.name, a.apellidos, b.folio from cliente a left join fatura b on a.id = b.idcliente;
++-----------+-----------+-------+
+| name      | apellidos | folio |
++-----------+-----------+-------+
+| Isaac     | Guzman    |  NULL |
+| Alejandro | Estrada   |  NULL |
+| Juan      | Perez     |  NULL |
+| Carlos    | Gmaboa    |  NULL |
+| Ruben     | Hernandez |  NULL |
+| Angel     | Arizpe    |  NULL |
++-----------+-----------+-------+
+6 rows in set (0.0013 sec)
+ MySQL  localhost:3306 ssl  tbd_e2  SQL > select a.name, a.apellidos, b.folio from cliente a left join fatura b on a.id = b.idcliente where b.folio is null;
++-----------+-----------+-------+
+| name      | apellidos | folio |
++-----------+-----------+-------+
+| Isaac     | Guzman    |  NULL |
+| Alejandro | Estrada   |  NULL |
+| Juan      | Perez     |  NULL |
+| Carlos    | Gmaboa    |  NULL |
+| Ruben     | Hernandez |  NULL |
+| Angel     | Arizpe    |  NULL |
++-----------+-----------+-------+
+6 rows in set (0.0011 sec)
+ MySQL  localhost:3306 ssl  tbd_e2  SQL >
